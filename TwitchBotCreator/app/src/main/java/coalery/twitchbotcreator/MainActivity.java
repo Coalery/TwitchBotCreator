@@ -3,7 +3,6 @@ package coalery.twitchbotcreator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,12 +15,6 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
-import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Calendar;
-import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity {
     private final String ADDRESS = "irc.twitch.tv.";
     private final int PORT = 6667;
@@ -30,17 +23,14 @@ public class MainActivity extends AppCompatActivity {
     private final String CHANNEL_NAME = "#doralife12";
     private final String OAUTH_TOKEN = "oauth:j4psapvud2om1n06xt51bb2d09dkm0";
 
-    private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
-
     private Context rhino;
     private Scriptable scope;
 
     private View[] screens;
 
     private EditText code;
-    private TextView log;
+
+    private TwitchBot twitchBot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
         screens[2] = findViewById(R.id.log_screen);
 
         code = findViewById(R.id.code_text);
-        log = findViewById(R.id.log_text);
+        TextView log = findViewById(R.id.log_text);
+
+        Logger.registerLogLocation(log);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener((item) -> {
@@ -68,14 +60,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button bot_onoff = findViewById(R.id.bot_onoff);
+
         bot_onoff.setOnClickListener((view) -> {
-            Thread worker = new Thread() {
-                public void run() {
-                    try {
-                        socket = new Socket();
-                    }
-                }
-            };
+            try {
+                twitchBot = new TwitchBot(CHANNEL_NAME, BOT_USERNAME);
+                twitchBot.setVerbose(true);
+                twitchBot.connect(ADDRESS, PORT, OAUTH_TOKEN);
+                twitchBot.joinChannel(CHANNEL_NAME);
+                twitchBot.sendMessage(CHANNEL_NAME, "Hello!");
+            } catch(Exception e0) {
+                Logger.log(e0.getMessage());
+            }
         });
 
         setScreen(0);
@@ -85,17 +80,6 @@ public class MainActivity extends AppCompatActivity {
         for(View screen : screens)
             screen.setVisibility(View.INVISIBLE);
         screens[index].setVisibility(View.VISIBLE);
-    }
-
-    public void addLog(String content) {
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-        int second = c.get(Calendar.SECOND);
-
-        String timeText = String.format(Locale.KOREA, "[%02d:%02d:%02d]", hour, minute, second);
-
-        log.append(timeText + " " + content + "\n");
     }
 
     private void runScript() {
@@ -108,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             callScriptMethod("onStart", new Object[] {});
         } catch(Exception e) {
             Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
-            addLog(e.toString());
+            Logger.log(e.toString());
         } finally {
             Context.exit();
         }
@@ -120,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             func.call(rhino, scope, scope, args);
         } catch(ClassCastException ignored) {
         } catch(Exception e) {
-            addLog("Failed to call function - " + name);
+            Logger.log("Failed to call function - " + name);
         }
     }
 }
