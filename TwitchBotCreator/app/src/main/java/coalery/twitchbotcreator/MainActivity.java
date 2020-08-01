@@ -3,14 +3,13 @@ package coalery.twitchbotcreator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -40,14 +39,22 @@ public class MainActivity extends AppCompatActivity {
 
         code = findViewById(R.id.code_text);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        bottomNavigationView.setOnNavigationItemSelectedListener((item) -> {
-            if(item.getItemId() == R.id.bottom_bar_home)
-                setScreen(0);
-            else if(item.getItemId() == R.id.bottom_bar_code)
-                setScreen(1);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                setScreen(tab.getPosition());
+            }
 
-            return true;
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
         });
 
         Button bot_onoff = findViewById(R.id.bot_onoff);
