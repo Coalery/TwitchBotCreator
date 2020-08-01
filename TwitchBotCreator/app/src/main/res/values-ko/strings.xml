@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TwitchBotCreator</string>
+    <string name="bottom_bar_home">홈</string>
+    <string name="bottom_bar_code">코드</string>
+    <string name="bottom_bar_log">로그</string>
+    <string name="bot_start">봇 켜기</string>
+    <string name="bot_stop">봇 끄기</string>
+    <string name="code_page_hint">코드를 입력하세요&#8230;</string>
+</resources>
