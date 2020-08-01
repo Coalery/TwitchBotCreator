@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         app:itemBackground="@android:color/white"
         app:itemIconTint="@drawable/bottom_bar_selector"
-        app:itemTextColor="@drawable/bottom_bar_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,26 +51,11 @@
                 android:id="@+id/code_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:ems="10"
                 android:gravity="start|top"
-                android:background="@null"
                 android:hint="@string/code_page_hint"
                 android:inputType="textMultiLine" />
-
-        </ScrollView>
-
-        <ScrollView
-            android:id="@+id/log_screen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:visibility="invisible">
-
-            <TextView
-                android:id="@+id/log_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black" />
 
         </ScrollView>
 

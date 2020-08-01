@@ -3,7 +3,6 @@ package coalery.twitchbotcreator;
 import org.jibble.pircbot.PircBot;
 
 public class TwitchBot extends PircBot {
-
     private String channel;
 
     TwitchBot(String channel, String nick) {
@@ -14,7 +13,7 @@ public class TwitchBot extends PircBot {
 
     @Override
     protected  void handleLine(String line) {
-        Logger.log(line);
+
     }
 
 }

@@ -14,10 +14,4 @@
         android:title="@string/bottom_bar_code"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/bottom_bar_log"
-        android:icon="@drawable/bottom_bar_log"
-        android:title="@string/bottom_bar_log"
-        app:showAsAction="ifRoom"/>
-
 </menu>
