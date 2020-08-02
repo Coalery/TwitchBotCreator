@@ -6,70 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/home_screen"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItem1"
+        <Button
+            android:id="@+id/bot_onoff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bottom_bar_home"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItem2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bottom_bar_code"/>
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <FrameLayout
-        android:id="@+id/main_layout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tab_layout">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/home_screen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible">
-
-            <Button
-                android:id="@+id/bot_onoff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ScrollView
-            android:id="@+id/code_screen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <EditText
-                android:id="@+id/code_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="@string/code_page_hint"
-                android:inputType="textMultiLine" />
-
-        </ScrollView>
-
-    </FrameLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
