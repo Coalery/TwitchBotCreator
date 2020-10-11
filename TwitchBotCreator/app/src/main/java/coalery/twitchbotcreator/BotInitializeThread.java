@@ -2,7 +2,13 @@ package coalery.twitchbotcreator;
 
 import android.util.Log;
 
-public class BotThread extends Thread {
+public class BotInitializeThread extends Thread {
+
+    private IBotInitializeCallback callback;
+
+    public BotInitializeThread(IBotInitializeCallback callback) {
+        this.callback = callback;
+    }
 
     @Override
     public void run() {
@@ -18,6 +24,8 @@ public class BotThread extends Thread {
             bot.setVerbose(false);
             bot.connect(ADDRESS, PORT, OAUTH_TOKEN);
             bot.joinChannel(CHANNEL_NAME);
+
+            this.callback.onCompleted(bot);
         } catch(Exception e0) {
             Log.e("Error!", e0.toString());
         }

@@ -7,18 +7,49 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BotThread botThread;
+    private TwitchBot twitchBot; // 봇 객체
+    private boolean isBotOn; // 봇이 켜져있는가.
+
+    private Button botSwitch; // 봇 스위치 버튼
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button bot_switch = findViewById(R.id.bot_switch);
+        isBotOn = false;
 
-        bot_switch.setOnClickListener((view) -> {
-            botThread = new BotThread();
-            botThread.start();
+        botSwitch = findViewById(R.id.bot_switch);
+        botSwitch.setText("켜기");
+
+        botSwitch.setOnClickListener((view) -> {
+            if(isBotOn) { // 봇이 켜져있으면, 봇을 끈다.
+                botSwitch.setEnabled(false); // 처리 중에는 버튼을 비활성화한다.
+                if(twitchBot != null) { // 봇을 끈다.
+                    twitchBot.disconnect();
+                    twitchBot.dispose();
+                }
+                isBotOn = false;
+                botSwitch.setText("켜기");
+                botSwitch.setEnabled(true); // 처리를 완료하였으므로 버튼을 다시 활성화시킨다.
+            } else { // 봇이 꺼져있으면, 봇을 킨다.
+                botSwitch.setEnabled(false); // 처리 중에는 버튼을 비활성화한다.
+                BotInitializeThread botInitThread = new BotInitializeThread(new BotInitializeCallback());
+                botInitThread.start(); // 초기화 쓰레드를 시작한다.
+            }
         });
     }
+
+    private class BotInitializeCallback implements IBotInitializeCallback { // 봇 초기화가 완료되면 호출되는 콜백
+        @Override
+        public void onCompleted(TwitchBot bot) {
+            MainActivity.this.twitchBot = bot;
+            runOnUiThread(() -> { // 처리를 완료하였으므로 버튼을 다시 활성화시킨다.
+                isBotOn = true;
+                botSwitch.setText("끄기");
+                botSwitch.setEnabled(true);
+            });
+        }
+    }
+
 }
