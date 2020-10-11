@@ -10,7 +10,7 @@ public class BotThread extends Thread {
         final int PORT = 6667;
 
         final String BOT_USERNAME = "twitch_bot_creator";
-        final String OAUTH_TOKEN = "oauth:j4psapvud2om1n06xt51bb2d09dkm0";
+        final String OAUTH_TOKEN = "oauth:hapg6bmd76460g3el2pejhaw56dido";
         final String CHANNEL_NAME = "#doralife12";
 
         try {

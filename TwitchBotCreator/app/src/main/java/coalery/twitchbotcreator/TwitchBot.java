@@ -56,7 +56,7 @@ public class TwitchBot extends PircBot {
                 badges.add(badge.split("/")[0]);
         }
 
-        StringBuilder sb = new StringBuilder((split.length - 4) * 16);
+        StringBuilder sb = new StringBuilder();
         for(int i=4; i<split.length; i++) {
             if(sb.length() > 0) sb.append(" ");
             sb.append(split[i]);
@@ -67,6 +67,8 @@ public class TwitchBot extends PircBot {
         String sender_nickname = map.get("display-name");
         String message = sb.toString();
 
+        if(message.charAt(0) == ':')
+            message = message.substring(1);
 
         Object obj = callScriptMethod("onMessageReceived", new Object[] {channel, badge_array, sender_id, sender_nickname, message});
         if(obj instanceof Undefined) return;

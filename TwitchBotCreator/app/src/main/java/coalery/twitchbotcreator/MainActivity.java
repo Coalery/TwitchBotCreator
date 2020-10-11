@@ -14,9 +14,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button bot_onoff = findViewById(R.id.bot_onoff);
+        Button bot_switch = findViewById(R.id.bot_switch);
 
-        bot_onoff.setOnClickListener((view) -> {
+        bot_switch.setOnClickListener((view) -> {
             botThread = new BotThread();
             botThread.start();
         });
