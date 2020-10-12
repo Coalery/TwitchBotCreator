@@ -1,7 +1,10 @@
 package coalery.twitchbotcreator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -16,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
 
         isBotOn = false;
 
@@ -34,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 botSwitch.setEnabled(true); // 처리를 완료하였으므로 버튼을 다시 활성화시킨다.
             } else { // 봇이 꺼져있으면, 봇을 킨다.
                 botSwitch.setEnabled(false); // 처리 중에는 버튼을 비활성화한다.
-                BotInitializeThread botInitThread = new BotInitializeThread(new BotInitializeCallback());
+                BotInitializeThread botInitThread = new BotInitializeThread(getApplicationContext(), new BotInitializeCallback());
                 botInitThread.start(); // 초기화 쓰레드를 시작한다.
             }
         });

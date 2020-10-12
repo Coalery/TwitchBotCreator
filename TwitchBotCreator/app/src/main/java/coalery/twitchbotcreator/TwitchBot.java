@@ -1,22 +1,36 @@
 package coalery.twitchbotcreator;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jibble.pircbot.PircBot;
-import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TwitchBot extends PircBot {
-    private Context rhino;
+    private static final String BOT_FILE_PATH = "/twitchbot";
+    private static final String BOT_FILE_NAME = "twitchbot.js";
+
+    private Context context;
+    private org.mozilla.javascript.Context rhino;
     private Scriptable scope;
     private String channel;
 
-    TwitchBot(String channel, String username) {
+    TwitchBot(Context context, String channel, String username) {
+        this.context = context;
         this.channel = channel;
         setName(username);
         setLogin(username);
@@ -76,28 +90,70 @@ public class TwitchBot extends PircBot {
     }
 
     private void initializeScript() {
-        String testCode =
-                "function onStart() {" +
-                "" +
-                "}" +
-                "" +
-                "function onMessageReceived(channel, badges, sender_id, sender_nickname, message) {" +
-                "    return message;" +
-                "}";
-
-        rhino = Context.enter();
+        rhino = org.mozilla.javascript.Context.enter();
         rhino.setOptimizationLevel(-1);
+
+        String code = loadFile();
+
 
         try {
             scope = rhino.initStandardObjects();
-            rhino.setLanguageVersion(Context.VERSION_1_8);
-            rhino.evaluateString(scope, testCode, "JavaScript", 1, null);
+            rhino.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_8);
+            rhino.evaluateString(scope, code, "JavaScript", 1, null);
             callScriptMethod("onStart", new Object[] {});
         } catch(Exception e) {
             log(e.toString());
         } finally {
-            Context.exit();
+            org.mozilla.javascript.Context.exit();
         }
+    }
+
+    private void writeDefaultFileIfNotExist(String scriptFilePath) throws IOException {
+        File scriptFileDir = new File(scriptFilePath);
+        if(!scriptFileDir.exists()) { scriptFileDir.mkdir(); } // 디렉토리가 없다면 만든다.
+
+        File scriptFile = new File(scriptFilePath, BOT_FILE_NAME);
+        if(!scriptFile.exists()) { // 파일이 없으면 만든다.
+            String testCode =
+            "function onStart() {}" +
+            "" +
+            "function onMessageReceived(channel, badges, sender_id, sender_nickname, message) {" +
+            "    return message;" +
+            "}";
+
+            String[] codeLines = testCode.split("\n");
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(scriptFile, false));
+            for(String codeLine : codeLines) {
+                bw.write(codeLine);
+                bw.newLine();
+            }
+            bw.close();
+        }
+    }
+
+    private String loadFile() { // 파일을 읽어서 파일 내용을 반환한다.
+        String result = "";
+        try {
+            String scriptFilePath = null;
+            if(Build.VERSION.SDK_INT < 29) scriptFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BOT_FILE_PATH;
+            else scriptFilePath = context.getExternalFilesDir(BOT_FILE_PATH).getAbsolutePath();
+
+            writeDefaultFileIfNotExist(scriptFilePath);
+
+            BufferedReader br = new BufferedReader(new FileReader(new File(context.getFilesDir().getAbsolutePath() + BOT_FILE_PATH, BOT_FILE_NAME)));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+            br.close();
+            result = sb.toString();
+        } catch(IOException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return result;
     }
 
     private Object callScriptMethod(String name, Object[] args) {
