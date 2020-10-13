@@ -95,7 +95,6 @@ public class TwitchBot extends PircBot {
 
         String code = loadFile();
 
-
         try {
             scope = rhino.initStandardObjects();
             rhino.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_8);
@@ -137,7 +136,21 @@ public class TwitchBot extends PircBot {
         try {
             String scriptFilePath = null;
             if(Build.VERSION.SDK_INT < 29) scriptFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BOT_FILE_PATH;
-            else scriptFilePath = context.getExternalFilesDir(BOT_FILE_PATH).getAbsolutePath();
+            else {
+                File dir = context.getExternalFilesDir(BOT_FILE_PATH);
+                if(dir != null) {
+                    scriptFilePath = dir.getAbsolutePath();
+                }
+            }
+
+            if(scriptFilePath == null) {
+                Toast.makeText(context, "파일 읽기를 실패하여 기본 코드로 대체됩니다.", Toast.LENGTH_LONG).show();
+                return "function onStart() {}" +
+                "" +
+                "function onMessageReceived(channel, badges, sender_id, sender_nickname, message) {" +
+                "    return message;" +
+                "}";
+            }
 
             writeDefaultFileIfNotExist(scriptFilePath);
 
