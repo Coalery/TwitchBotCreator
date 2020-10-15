@@ -162,17 +162,15 @@ public class MainActivity extends AppCompatActivity {
             if(!scriptFileDir.exists()) { scriptFileDir.mkdir(); } // 디렉토리가 없다면 만든다.
 
             File scriptFile = new File(scriptFilePath, BOT_FILE_NAME);
-            if(!scriptFile.exists()) { // 파일이 없으면 만든다.
-                String code = codeText.getText().toString();
-                String[] codeLines = code.split("\n");
+            String code = codeText.getText().toString();
+            String[] codeLines = code.split("\n");
 
-                BufferedWriter bw = new BufferedWriter(new FileWriter(scriptFile, false));
-                for(String codeLine : codeLines) {
-                    bw.write(codeLine);
-                    bw.newLine();
-                }
-                bw.close();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(scriptFile, false));
+            for(String codeLine : codeLines) {
+                bw.write(codeLine);
+                bw.newLine();
             }
+            bw.close();
         } catch(IOException e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
