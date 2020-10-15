@@ -1,37 +1,26 @@
 package coalery.twitchbotcreator;
 
-import android.content.Context;
-import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.jibble.pircbot.PircBot;
+import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TwitchBot extends PircBot {
-    private static final String BOT_FILE_PATH = "/twitchbot";
-    private static final String BOT_FILE_NAME = "twitchbot.js";
-
-    private Context context;
     private org.mozilla.javascript.Context rhino;
     private Scriptable scope;
     private String channel;
+    private String code;
 
-    TwitchBot(Context context, String channel, String username) {
-        this.context = context;
+    TwitchBot(String channel, String username, String code) {
         this.channel = channel;
+        this.code = code;
         setName(username);
         setLogin(username);
     }
@@ -64,8 +53,9 @@ public class TwitchBot extends PircBot {
         }
 
         ArrayList<String> badges = new ArrayList<>();
-        if(map.get("badges") != null) {
-            String[] badge_split = map.get("badges").split(",");
+        String rawBadges = map.get("badges");
+        if(rawBadges != null) {
+            String[] badge_split = rawBadges.split(",");
             for(String badge : badge_split)
                 badges.add(badge.split("/")[0]);
         }
@@ -76,7 +66,7 @@ public class TwitchBot extends PircBot {
             sb.append(split[i]);
         }
 
-        Object[] badge_array = badges.toArray();
+        Scriptable badge_array = rhino.newArray(scope, badges.toArray());
         String sender_id = split[1].split("!")[0].substring(1);
         String sender_nickname = map.get("display-name");
         String message = sb.toString();
@@ -85,19 +75,18 @@ public class TwitchBot extends PircBot {
             message = message.substring(1);
 
         Object obj = callScriptMethod("onMessageReceived", new Object[] {channel, badge_array, sender_id, sender_nickname, message});
+        if(obj == null) return;
         if(obj instanceof Undefined) return;
-        sendMessage(channel, (String) obj);
+        sendMessage(channel, obj.toString());
     }
 
     private void initializeScript() {
         rhino = org.mozilla.javascript.Context.enter();
         rhino.setOptimizationLevel(-1);
 
-        String code = loadFile();
-
         try {
             scope = rhino.initStandardObjects();
-            rhino.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_8);
+            rhino.setLanguageVersion(Context.VERSION_1_8);
             rhino.evaluateString(scope, code, "JavaScript", 1, null);
             callScriptMethod("onStart", new Object[] {});
         } catch(Exception e) {
@@ -105,68 +94,6 @@ public class TwitchBot extends PircBot {
         } finally {
             org.mozilla.javascript.Context.exit();
         }
-    }
-
-    private void writeDefaultFileIfNotExist(String scriptFilePath) throws IOException {
-        File scriptFileDir = new File(scriptFilePath);
-        if(!scriptFileDir.exists()) { scriptFileDir.mkdir(); } // 디렉토리가 없다면 만든다.
-
-        File scriptFile = new File(scriptFilePath, BOT_FILE_NAME);
-        if(!scriptFile.exists()) { // 파일이 없으면 만든다.
-            String testCode =
-            "function onStart() {}" +
-            "" +
-            "function onMessageReceived(channel, badges, sender_id, sender_nickname, message) {" +
-            "    return message;" +
-            "}";
-
-            String[] codeLines = testCode.split("\n");
-
-            BufferedWriter bw = new BufferedWriter(new FileWriter(scriptFile, false));
-            for(String codeLine : codeLines) {
-                bw.write(codeLine);
-                bw.newLine();
-            }
-            bw.close();
-        }
-    }
-
-    private String loadFile() { // 파일을 읽어서 파일 내용을 반환한다.
-        String result = "";
-        try {
-            String scriptFilePath = null;
-            if(Build.VERSION.SDK_INT < 29) scriptFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + BOT_FILE_PATH;
-            else {
-                File dir = context.getExternalFilesDir(BOT_FILE_PATH);
-                if(dir != null) {
-                    scriptFilePath = dir.getAbsolutePath();
-                }
-            }
-
-            if(scriptFilePath == null) {
-                Toast.makeText(context, "파일 읽기를 실패하여 기본 코드로 대체됩니다.", Toast.LENGTH_LONG).show();
-                return "function onStart() {}" +
-                "" +
-                "function onMessageReceived(channel, badges, sender_id, sender_nickname, message) {" +
-                "    return message;" +
-                "}";
-            }
-
-            writeDefaultFileIfNotExist(scriptFilePath);
-
-            BufferedReader br = new BufferedReader(new FileReader(new File(context.getFilesDir().getAbsolutePath() + BOT_FILE_PATH, BOT_FILE_NAME)));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append("\n");
-            }
-            br.close();
-            result = sb.toString();
-        } catch(IOException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        return result;
     }
 
     private Object callScriptMethod(String name, Object[] args) {

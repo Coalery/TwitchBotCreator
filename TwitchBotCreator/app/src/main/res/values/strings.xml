@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TwitchBotCreator</string>
-    <string name="code_text_hint">코드를 입력하세요&#8230;</string>
+    <string name="code_text_hint">코드를 입력해주세요!</string>
     <string name="auto_fill">AutoFill</string>
 </resources>
