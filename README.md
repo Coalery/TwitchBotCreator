@@ -5,3 +5,5 @@
 # References
 
 [Pircbot](http://www.jibble.org/pircbot.php)
+
+[rhino](https://github.com/mozilla/rhino)
