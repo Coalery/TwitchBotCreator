@@ -37,6 +37,9 @@ public class SettingActivity extends AppCompatActivity {
                 return;
             }
 
+            PreferenceManager.setString(getApplicationContext(), "twbotcr_channel", channel);
+            PreferenceManager.setString(getApplicationContext(), "twbotcr_oauth", oauth);
+
             Intent intent = new Intent();
             intent.putExtra("setting", new SettingData(channel, oauth));
             setResult(RESULT_OK, intent);

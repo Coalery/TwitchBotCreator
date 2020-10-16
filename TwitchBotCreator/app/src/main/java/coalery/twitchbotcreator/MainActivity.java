@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
+        channel = PreferenceManager.getString(getApplicationContext(), "twbotcr_channel");
+        oauth = PreferenceManager.getString(getApplicationContext(), "twbotcr_oauth");
+
         isBotOn = false;
 
         // #region 봇 스위치 버튼 설정
