@@ -21,6 +21,15 @@
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/bot_switch" />
 
+    <Button
+        android:id="@+id/setting_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/save_button" />
+
     <EditText
         android:id="@+id/code_text"
         android:layout_width="wrap_content"

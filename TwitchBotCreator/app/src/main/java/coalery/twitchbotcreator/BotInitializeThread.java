@@ -2,10 +2,17 @@ package coalery.twitchbotcreator;
 
 public class BotInitializeThread extends Thread {
 
+    private String channel;
+    private String oauth;
     private String code;
     private IBotInitializeCallback callback;
 
-    public BotInitializeThread(String code, IBotInitializeCallback callback) {
+    public BotInitializeThread(String channel, String oauth, String code, IBotInitializeCallback callback) {
+        if(!channel.startsWith("#"))
+            channel = "#" + channel;
+
+        this.channel = channel;
+        this.oauth = oauth;
         this.code = code;
         this.callback = callback;
     }
@@ -16,14 +23,13 @@ public class BotInitializeThread extends Thread {
         final int PORT = 6667;
 
         final String BOT_USERNAME = "twitch_bot_creator";
-        final String OAUTH_TOKEN = "oauth:hapg6bmd76460g3el2pejhaw56dido";
-        final String CHANNEL_NAME = "#doralife12";
+
 
         try {
-            TwitchBot bot = new TwitchBot(CHANNEL_NAME, BOT_USERNAME, code);
+            TwitchBot bot = new TwitchBot(channel, BOT_USERNAME, code);
             bot.setVerbose(false);
-            bot.connect(ADDRESS, PORT, OAUTH_TOKEN);
-            bot.joinChannel(CHANNEL_NAME);
+            bot.connect(ADDRESS, PORT, oauth);
+            bot.joinChannel(channel);
 
             this.callback.onCompleted(bot);
         } catch(Exception e0) {

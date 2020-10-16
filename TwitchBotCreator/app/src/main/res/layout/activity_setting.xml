@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1"
+        android:padding="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="채널 아이디"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
+
+            <EditText
+                android:id="@+id/channelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="http://twitch.tv/[이곳을 입력]" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="OAuth Token"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
+
+            <EditText
+                android:id="@+id/oauthText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:id="@+id/getTokenButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get OAuth Token" />
+
+    <Button
+        android:id="@+id/settingSaveButon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="저장" />
+</LinearLayout>
