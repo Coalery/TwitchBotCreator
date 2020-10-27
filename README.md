@@ -38,6 +38,12 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 
 `message` 매개변수는 받은 채팅의 내용입니다.
 
+## 예정 기능
+
+- [ ] Sqlite Database
+- [ ] File Read/Write
+- [ ] Manager Command
+
 # References
 
 [Pircbot](http://www.jibble.org/pircbot.php)
