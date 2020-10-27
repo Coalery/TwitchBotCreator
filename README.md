@@ -2,6 +2,8 @@
 
 안드로이드 환경에서 js를 통해 트위치 봇을 만드는 앱.
 
+<br>
+
 ## 기능
 
 매우 기본적인 기능만이 내장되어 있습니다.
@@ -17,6 +19,8 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
     return message;
 }
 ```
+
+<br>
 
 ## Functions
 
@@ -38,11 +42,15 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 
 `message` 매개변수는 받은 채팅의 내용입니다.
 
+<br>
+
 ## 예정 기능
 
 - [ ] Sqlite Database
 - [ ] File Read/Write
 - [ ] Manager Command
+
+<br>
 
 # References
 
