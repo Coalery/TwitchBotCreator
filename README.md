@@ -46,9 +46,11 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 
 ## 예정 기능
 
+- [x] Default Functions
 - [ ] Sqlite Database
 - [ ] File Read/Write
 - [ ] Manager Command
+- [ ] Blacklist
 
 <br>
 
