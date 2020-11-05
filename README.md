@@ -50,7 +50,8 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 - [ ] Sqlite Database
 - [ ] File Read/Write
 - [ ] Manager Command
-- [ ] Blacklist
+- [x] Blacklist
+- [ ] Random
 
 <br>
 
