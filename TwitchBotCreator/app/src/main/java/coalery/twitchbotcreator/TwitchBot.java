@@ -5,22 +5,28 @@ import android.util.Log;
 import org.jibble.pircbot.PircBot;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import coalery.twitchbotcreator.api.BlacklistApi;
+
 public class TwitchBot extends PircBot {
-    private org.mozilla.javascript.Context rhino;
-    private Scriptable scope;
+    public static org.mozilla.javascript.Context rhino;
+    public static Scriptable scope;
+
     private String channel;
     private String code;
+
+    private BlacklistApi blacklistApi;
 
     TwitchBot(String channel, String username, String code) {
         this.channel = channel;
         this.code = code;
+
         setName(username);
         setLogin(username);
     }
@@ -39,6 +45,7 @@ public class TwitchBot extends PircBot {
     @Override
     protected void handleLine(String line) {
         Log.d("Received", line);
+
         String[] split = line.split(" ");
 
         if(!split[2].equals("PRIVMSG")) return;
@@ -74,6 +81,8 @@ public class TwitchBot extends PircBot {
         if(message.charAt(0) == ':')
             message = message.substring(1);
 
+        if(blacklistApi.contains(sender_id)) return;
+
         Object obj = callScriptMethod("onMessageReceived", new Object[] {channel, badge_array, sender_id, sender_nickname, message});
         if(obj == null) return;
         if(obj instanceof Undefined) return;
@@ -87,6 +96,15 @@ public class TwitchBot extends PircBot {
         try {
             scope = rhino.initStandardObjects();
             rhino.setLanguageVersion(Context.VERSION_1_8);
+
+            Object jsOut = Context.javaToJS(System.out, scope);
+            ScriptableObject.putProperty(scope, "out", jsOut);
+
+            ScriptableObject.defineClass(scope, BlacklistApi.class);
+            Scriptable blacklist = rhino.newObject(scope, "BlacklistApi");
+            scope.put("blacklist", scope, blacklist);
+            blacklistApi = (BlacklistApi) blacklist;
+
             rhino.evaluateString(scope, code, "JavaScript", 1, null);
             callScriptMethod("onStart", new Object[] {});
         } catch(Exception e) {
