@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import coalery.twitchbotcreator.api.BlacklistApi;
+import coalery.twitchbotcreator.api.RandomApi;
 
 public class TwitchBot extends PircBot {
     public static org.mozilla.javascript.Context rhino;
@@ -104,6 +105,9 @@ public class TwitchBot extends PircBot {
             Scriptable blacklist = rhino.newObject(scope, "BlacklistApi");
             scope.put("blacklist", scope, blacklist);
             blacklistApi = (BlacklistApi) blacklist;
+
+            ScriptableObject.defineClass(scope, RandomApi.class);
+            Scriptable random = rhino.newObject(scope, "RandomApi");
 
             rhino.evaluateString(scope, code, "JavaScript", 1, null);
             callScriptMethod("onStart", new Object[] {});
