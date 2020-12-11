@@ -51,7 +51,7 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 - [ ] File Read/Write
 - [ ] Manager Command
 - [x] Blacklist
-- [ ] Random
+- [x] Random
 - [ ] Save/Load Data for each users
 
 <br>
