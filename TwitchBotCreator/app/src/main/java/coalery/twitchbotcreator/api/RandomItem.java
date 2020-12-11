@@ -11,6 +11,11 @@ public class RandomItem extends ScriptableObject {
     private final String message;
     private final int value;
 
+    public RandomItem() {
+        this.message = "";
+        this.value = -1;
+    }
+
     public RandomItem(String message, int value) {
         this.message = message;
         this.value = value;

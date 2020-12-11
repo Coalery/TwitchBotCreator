@@ -5,6 +5,7 @@ import android.util.Log;
 import org.jibble.pircbot.PircBot;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
@@ -98,7 +99,7 @@ public class TwitchBot extends PircBot {
 //        Log.i("TESTTESTTEST1", blacklistApi.toString());
         Log.i("TESTTESTTEST2", "2");
 
-        if(blacklistApi.contains(sender_id)) return;
+        if(blacklistApi != null && blacklistApi.contains(sender_id)) return;
 
         Log.i("TESTTESTTEST1", "2");
 
@@ -121,27 +122,27 @@ public class TwitchBot extends PircBot {
         rhino = org.mozilla.javascript.Context.enter();
         rhino.setOptimizationLevel(-1);
 
-        try {
-            scope = rhino.initStandardObjects();
-            rhino.setLanguageVersion(Context.VERSION_1_8);
+        scope = rhino.initStandardObjects();
+        rhino.setLanguageVersion(Context.VERSION_1_8);
 
+        Object wrappedOut = Context.javaToJS(System.out, scope);
+        ScriptableObject.putProperty(scope, "out", wrappedOut);
+
+        try {
             ScriptableObject.defineClass(scope, BlacklistApi.class);
-//            ScriptableObject.defineClass(scope, RandomApi.class);
-//            ScriptableObject.defineClass(scope, RandomItem.class);
+            ScriptableObject.defineClass(scope, RandomApi.class);
 
             Scriptable blacklist = rhino.newObject(scope, "BlacklistApi");
             scope.put("blacklist", scope, blacklist);
             blacklistApi = (BlacklistApi) blacklist;
 
 //            Scriptable random = rhino.newObject(scope, "RandomApi");
+        } catch(Exception e) {e.printStackTrace();}
 
-            rhino.evaluateString(scope, code, "JavaScript", 1, null);
-            callScriptMethod("onStart", new Object[] {});
-        } catch(Exception e) {
-            log(e.toString());
-        } finally {
-            org.mozilla.javascript.Context.exit();
-        }
+        rhino.evaluateString(scope, code, "JavaScript", 1, null);
+        callScriptMethod("onStart", new Object[] {});
+
+        org.mozilla.javascript.Context.exit();
     }
 
     private Object callScriptMethod(String name, Object[] args) {
@@ -151,8 +152,9 @@ public class TwitchBot extends PircBot {
             Log.i("TESTTESTTEST", func.toString());
             return func.call(rhino, scope, scope, args);
         } catch(ClassCastException cast) {
-            Log.e("TwitchBotCreator", cast.toString());
+            cast.printStackTrace();
         } catch(Exception e) {
+            e.printStackTrace();
             Log.d("TwitchBotCreator", "Failed to call function - " + name);
         }
         return null;

@@ -41,17 +41,42 @@ public class RandomApi extends ScriptableObject {
 
     @JSFunction
     public void addItem(String message, int val) {
+        if(val <= 0) {
+            return;
+        }
         itemList.add(new RandomItem(message, val));
     }
 
     @JSFunction
-    public void removeItem(String message, int val) {
-        itemList.remove(new RandomItem(message, val));
-    }
+    public void removeItem(String message, int val) { itemList.remove(new RandomItem(message, val)); }
+
+    @JSFunction
+    public void removeItemByIndex(int index) { itemList.remove(index); }
 
     @JSFunction
     public RandomItem get(int index) {
         return itemList.get(index);
+    }
+
+    @JSFunction
+    public String random() {
+        int sum = 0;
+        for(int i=0; i<itemList.size(); i++) {
+            sum += itemList.get(i).getValue();
+        }
+
+        Random random = new Random();
+        int randomValue = random.nextInt(sum) + 1;
+
+        String result = "";
+        for(int i=0; i<itemList.size(); i++) {
+            randomValue -= itemList.get(i).getValue();
+            if(randomValue <= 0) {
+                result = itemList.get(i).getMessage();
+                break;
+            }
+        }
+        return result;
     }
 
     @JSGetter
