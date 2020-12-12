@@ -53,8 +53,6 @@ public class TwitchBot extends PircBot {
 
         if(!split[2].equals("PRIVMSG")) return;
 
-        Log.i("TESTTESTTEST0", "1");
-
         HashMap<String, String> map = new HashMap<>();
         for(String kv : split[0].split(";")) {
             String[] kv_split = kv.split("=");
@@ -65,8 +63,6 @@ public class TwitchBot extends PircBot {
             }
         }
 
-        Log.i("TESTTESTTEST0", "2");
-
         ArrayList<String> badges = new ArrayList<>();
         String rawBadges = map.get("badges");
         if(rawBadges != null) {
@@ -75,46 +71,25 @@ public class TwitchBot extends PircBot {
                 badges.add(badge.split("/")[0]);
         }
 
-        Log.i("TESTTESTTEST0", "3");
-
         StringBuilder sb = new StringBuilder();
         for(int i=4; i<split.length; i++) {
             if(sb.length() > 0) sb.append(" ");
             sb.append(split[i]);
         }
 
-        Log.i("TESTTESTTEST0", "4");
-
         Scriptable badge_array = rhino.newArray(scope, badges.toArray());
         String sender_id = split[1].split("!")[0].substring(1);
         String sender_nickname = map.get("display-name");
         String message = sb.toString();
 
-        Log.i("TESTTESTTEST0", "5");
-
         if(message.charAt(0) == ':')
             message = message.substring(1);
 
-        Log.i("TESTTESTTEST2", "1");
-//        Log.i("TESTTESTTEST1", blacklistApi.toString());
-        Log.i("TESTTESTTEST2", "2");
-
         if(blacklistApi != null && blacklistApi.contains(sender_id)) return;
 
-        Log.i("TESTTESTTEST1", "2");
-
         Object obj = callScriptMethod("onMessageReceived", new Object[] {channel, badge_array, sender_id, sender_nickname, message});
-
-        Log.i("TESTTESTTEST1", "3");
-
         if(obj == null) return;
-
-        Log.i("TESTTESTTEST1", "4");
-
         if(obj instanceof Undefined) return;
-
-        Log.i("TESTTESTTEST1", "5");
-
         sendMessage(channel, obj.toString());
     }
 
@@ -131,12 +106,11 @@ public class TwitchBot extends PircBot {
         try {
             ScriptableObject.defineClass(scope, BlacklistApi.class);
             ScriptableObject.defineClass(scope, RandomApi.class);
+            ScriptableObject.defineClass(scope, RandomItem.class);
 
             Scriptable blacklist = rhino.newObject(scope, "BlacklistApi");
             scope.put("blacklist", scope, blacklist);
             blacklistApi = (BlacklistApi) blacklist;
-
-//            Scriptable random = rhino.newObject(scope, "RandomApi");
         } catch(Exception e) {e.printStackTrace();}
 
         rhino.evaluateString(scope, code, "JavaScript", 1, null);
@@ -147,9 +121,7 @@ public class TwitchBot extends PircBot {
 
     private Object callScriptMethod(String name, Object[] args) {
         try {
-            Log.i("TESTTESTTEST", "aejfopawe");
             Function func = (Function)scope.get(name, scope);
-            Log.i("TESTTESTTEST", func.toString());
             return func.call(rhino, scope, scope, args);
         } catch(ClassCastException cast) {
             cast.printStackTrace();
