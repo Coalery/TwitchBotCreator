@@ -6,11 +6,14 @@
 
 ## 기능
 
-매우 기본적인 기능만이 내장되어 있습니다.
-
 - 채널 타겟 설정
 - 봇 Oauth 토큰 설정
 - JS를 통한 봇 개발
+
+- 블랙리스트
+- 랜덤
+
+> API는 곧 작성됩니다!
 
 ```javascript
 function onStart() {}
@@ -51,7 +54,7 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 - [ ] File Read/Write
 - [ ] Manager Command
 - [x] Blacklist
-- [ ] Random
+- [x] Random
 - [ ] Save/Load Data for each users
 
 <br>
