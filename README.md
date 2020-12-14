@@ -56,6 +56,7 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 - [x] Blacklist
 - [x] Random
 - [ ] Save/Load Data for each users
+- [ ] Command Parse
 
 <br>
 
