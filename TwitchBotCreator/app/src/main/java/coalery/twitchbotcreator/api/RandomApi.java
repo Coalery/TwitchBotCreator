@@ -13,6 +13,7 @@ import java.util.Random;
 import coalery.twitchbotcreator.TwitchBot;
 
 public class RandomApi extends ScriptableObject {
+
     private ArrayList<RandomItem> itemList;
 
     public RandomApi() {}
@@ -44,14 +45,12 @@ public class RandomApi extends ScriptableObject {
         if(val <= 0) {
             return;
         }
-        itemList.add(new RandomItem(message, val));
+        RandomItem randomItem = (RandomItem) TwitchBot.rhino.newObject(TwitchBot.scope, "RandomItem", new Object[] { message, val });
+        itemList.add(randomItem);
     }
 
     @JSFunction
-    public void removeItem(String message, int val) { itemList.remove(new RandomItem(message, val)); }
-
-    @JSFunction
-    public void removeItemByIndex(int index) { itemList.remove(index); }
+    public void removeItem(int index) { itemList.remove(index); }
 
     @JSFunction
     public RandomItem get(int index) {

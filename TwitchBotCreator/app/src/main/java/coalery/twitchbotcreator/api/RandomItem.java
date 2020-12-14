@@ -3,20 +3,22 @@ package coalery.twitchbotcreator.api;
 import androidx.annotation.NonNull;
 
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSGetter;
 
 import java.util.Locale;
 
 public class RandomItem extends ScriptableObject {
-    private final String message;
-    private final int value;
+    private String message;
+    private int value;
 
     public RandomItem() {
         this.message = "";
         this.value = -1;
     }
 
-    public RandomItem(String message, int value) {
+    @JSConstructor
+    public void jsConstructor(String message, int value) {
         this.message = message;
         this.value = value;
     }

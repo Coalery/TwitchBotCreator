@@ -1,14 +1,11 @@
 package coalery.twitchbotcreator.api;
 
-import android.util.Log;
-
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 import org.mozilla.javascript.annotations.JSGetter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import coalery.twitchbotcreator.TwitchBot;
@@ -30,9 +27,7 @@ public class BlacklistApi extends ScriptableObject {
     }
 
     @JSFunction
-    public void add(String userId) {
-        blackList.add(userId);
-    }
+    public void add(String userId) { blackList.add(userId); }
 
     @JSFunction
     public void remove(String userId) {
@@ -40,10 +35,7 @@ public class BlacklistApi extends ScriptableObject {
     }
 
     @JSFunction
-    public boolean contains(String userId) {
-        Log.i("TESTTESTTEST3", "1");
-        return blackList.contains(userId);
-    }
+    public boolean contains(String userId) { return blackList.contains(userId); }
 
     @JSGetter
     public int length() {
