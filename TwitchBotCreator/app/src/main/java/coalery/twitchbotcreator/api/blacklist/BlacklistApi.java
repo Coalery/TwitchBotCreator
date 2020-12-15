@@ -1,4 +1,4 @@
-package coalery.twitchbotcreator.api;
+package coalery.twitchbotcreator.api.blacklist;
 
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;

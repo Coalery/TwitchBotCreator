@@ -5,7 +5,6 @@ import android.util.Log;
 import org.jibble.pircbot.PircBot;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
@@ -13,9 +12,9 @@ import org.mozilla.javascript.Undefined;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import coalery.twitchbotcreator.api.BlacklistApi;
-import coalery.twitchbotcreator.api.RandomApi;
-import coalery.twitchbotcreator.api.RandomItem;
+import coalery.twitchbotcreator.api.blacklist.BlacklistApi;
+import coalery.twitchbotcreator.api.random.RandomApi;
+import coalery.twitchbotcreator.api.random.RandomItem;
 
 public class TwitchBot extends PircBot {
     public static org.mozilla.javascript.Context rhino;

@@ -1,4 +1,4 @@
-package coalery.twitchbotcreator.api;
+package coalery.twitchbotcreator.api.random;
 
 import androidx.annotation.NonNull;
 
