@@ -1,13 +1,16 @@
 package coalery.twitchbotcreator;
 
+import android.content.Context;
+
 public class BotInitializeThread extends Thread {
 
+    private Context context;
     private String channel;
     private String oauth;
     private String code;
     private IBotInitializeCallback callback;
 
-    public BotInitializeThread(String channel, String oauth, String code, IBotInitializeCallback callback) {
+    public BotInitializeThread(Context context, String channel, String oauth, String code, IBotInitializeCallback callback) {
         if(!channel.startsWith("#"))
             channel = "#" + channel;
 
@@ -26,7 +29,7 @@ public class BotInitializeThread extends Thread {
 
 
         try {
-            TwitchBot bot = new TwitchBot(channel, BOT_USERNAME, code);
+            TwitchBot bot = new TwitchBot(context, channel, BOT_USERNAME, code);
             bot.setVerbose(false);
             bot.connect(ADDRESS, PORT, oauth);
             bot.joinChannel(channel);

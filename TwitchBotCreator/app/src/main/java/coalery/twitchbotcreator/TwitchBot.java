@@ -1,9 +1,10 @@
 package coalery.twitchbotcreator;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jibble.pircbot.PircBot;
-import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import coalery.twitchbotcreator.api.blacklist.BlacklistApi;
+import coalery.twitchbotcreator.api.cmdparse.CmdParseApi;
 import coalery.twitchbotcreator.api.random.RandomApi;
 import coalery.twitchbotcreator.api.random.RandomItem;
 
@@ -25,7 +27,11 @@ public class TwitchBot extends PircBot {
 
     private BlacklistApi blacklistApi;
 
-    TwitchBot(String channel, String username, String code) {
+    private Context context;
+
+    TwitchBot(Context context, String channel, String username, String code) {
+        this.context = context;
+
         this.channel = channel;
         this.code = code;
 
@@ -97,15 +103,16 @@ public class TwitchBot extends PircBot {
         rhino.setOptimizationLevel(-1);
 
         scope = rhino.initStandardObjects();
-        rhino.setLanguageVersion(Context.VERSION_1_8);
+        rhino.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_8);
 
-        Object wrappedOut = Context.javaToJS(System.out, scope);
+        Object wrappedOut = org.mozilla.javascript.Context.javaToJS(System.out, scope);
         ScriptableObject.putProperty(scope, "out", wrappedOut);
 
         try {
             ScriptableObject.defineClass(scope, BlacklistApi.class);
             ScriptableObject.defineClass(scope, RandomApi.class);
             ScriptableObject.defineClass(scope, RandomItem.class);
+            ScriptableObject.defineClass(scope, CmdParseApi.class);
 
             Scriptable blacklist = rhino.newObject(scope, "BlacklistApi");
             scope.put("blacklist", scope, blacklist);
@@ -125,8 +132,9 @@ public class TwitchBot extends PircBot {
         } catch(ClassCastException cast) {
             cast.printStackTrace();
         } catch(Exception e) {
-            e.printStackTrace();
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             Log.d("TwitchBotCreator", "Failed to call function - " + name);
+            e.printStackTrace();
         }
         return null;
     }

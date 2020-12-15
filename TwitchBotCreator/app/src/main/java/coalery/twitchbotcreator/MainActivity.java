@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setEnabled(false); // 봇을 켰으므로, 저장 버튼을 비활성화시킨다.
         settingButton.setEnabled(false); // 봇을 켰으므로, 설정 버튼을 비활성화시킨다.
         codeText.setEnabled(false); // 봇을 켰으므로, 코드 텍스트를 비활성화시킨다.
-        BotInitializeThread botInitThread = new BotInitializeThread(channel, oauth, codeText.getText().toString(), new BotInitializeCallback());
+        BotInitializeThread botInitThread = new BotInitializeThread(getApplicationContext(), channel, oauth, codeText.getText().toString(), new BotInitializeCallback());
         botInitThread.start(); // 초기화 쓰레드를 시작한다.
     }
 
