@@ -6,12 +6,24 @@
 
 ## 기능
 
+V 1.0
+
 - 채널 타겟 설정
 - 봇 Oauth 토큰 설정
 - JS를 통한 봇 개발
 
+<br>
+
+V 1.1
+
 - 블랙리스트
 - 랜덤
+
+<br>
+
+ Current
+
+- 명령어 파싱
 
 > API는 곧 작성됩니다!
 
@@ -56,7 +68,7 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 - [x] Blacklist
 - [x] Random
 - [ ] Save/Load Data for each users
-- [ ] Command Parse
+- [x] Command Parse
 
 <br>
 
