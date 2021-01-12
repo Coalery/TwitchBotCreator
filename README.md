@@ -69,6 +69,7 @@ function onMessageReceived(channel, badges, sender_id, sender_nickname, message)
 - [x] Random
 - [ ] Save/Load Data for each users
 - [x] Command Parse
+- [ ] Simple Message Map
 
 <br>
 
